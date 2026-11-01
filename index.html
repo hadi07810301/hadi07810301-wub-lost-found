@@ -3,471 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WUB Lost & Found</title>
+<title>WUB Lost __TITLE__amp; Found · World University of Bangladesh</title>
+<meta name="description" content="Lost and found board for World University of Bangladesh students. Post lost or found items on campus and help them get back to their owners.">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f4a261'/%3E%3Ccircle cx='14.5' cy='14.5' r='7' fill='none' stroke='%230b3a46' stroke-width='3'/%3E%3Cpath d='m20 20 5 5' stroke='%230b3a46' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#14213d; --ink2:#47506a; --muted:#5d667d;
-  --bg:#eef3f4; --card:#ffffff; --line:#d9e2e5;
-  --brand:#0f4c5c; --brand2:#0b3a46;
-  --lost:#b8344a; --lostbg:#fbe9eb;
-  --found:#1d7268; --foundbg:#e3f4f1;
-  --done:#5c636b; --donebg:#eceef0;
-  --amber:#f4a261;
-  --r:14px;
-}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{font-family:"Onest",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:"Bricolage Grotesque","Onest",sans-serif;margin:0;letter-spacing:-.01em}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
-
-/* Header */
-header.top{background:var(--brand);color:#fff;position:relative;overflow:hidden}
-header.top::after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(244,162,97,.35),transparent 65%)}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;position:relative;z-index:1}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600}
-.logo .mark{width:36px;height:36px;border-radius:10px;background:var(--amber);display:grid;place-items:center;color:var(--brand2)}
-.logo b{font-family:"Bricolage Grotesque","Onest",sans-serif;font-size:20px;font-weight:800}
-.hero{padding:26px 0 40px;position:relative;z-index:1;display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:end}
-.hero h1{font-size:clamp(30px,5vw,50px);font-weight:800;line-height:1.05}
-.hero h1 em{font-style:normal;color:var(--amber)}
-.hero p{color:#cfe1e5;max-width:520px;margin:14px 0 22px}
-.cta{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:0;border-radius:999px;padding:11px 20px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:transform .12s,box-shadow .12s}
-.btn:active{transform:translateY(1px)}
-.btn-lost{background:var(--lost);color:#fff}
-.btn-found{background:var(--found);color:#fff}
-.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
-.btn-dark{background:var(--ink);color:#fff}
-.btn:hover{box-shadow:0 6px 18px rgba(0,0,0,.15)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);padding:14px}
-.stat .n{font-family:"Bricolage Grotesque","Onest",sans-serif;font-size:30px;font-weight:800;line-height:1}
-.stat .l{font-size:13px;color:#cfe1e5;margin-top:4px}
-
-/* Toolbar */
-.toolbar{position:sticky;top:0;z-index:5;background:rgba(238,243,244,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.tb{display:flex;gap:10px;align-items:center;padding:12px 0;flex-wrap:wrap}
-.tabs{display:flex;background:#dde7ea;border-radius:999px;padding:4px}
-.tab{border:0;background:transparent;padding:7px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--ink2)}
-.tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.search{flex:1;min-width:200px;position:relative}
-.search input{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--line);border-radius:999px;background:#fff}
-.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
-select.f{padding:9px 12px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:14px}
-
-/* Grid */
-main{padding:24px 0 60px}
-.notice{background:#fff8ec;border:1px solid #f3dcb5;color:#7a5520;border-radius:var(--r);padding:10px 14px;font-size:14px;margin-bottom:18px;display:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:left;padding:0}
-.card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(20,33,61,.09)}
-.ph{aspect-ratio:4/3;background:#e4ecee;display:grid;place-items:center;position:relative;overflow:hidden}
-.ph img{width:100%;height:100%;object-fit:cover}
-.ph .ico{font-size:46px;opacity:.55}
-.badge{position:absolute;left:10px;top:10px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
-.b-lost{background:var(--lost);color:#fff}
-.b-found{background:var(--found);color:#fff}
-.b-done{background:var(--done);color:#fff}
-.cb{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
-.cb h3{font-size:17px;font-weight:600;line-height:1.25}
-.meta{font-size:13px;color:var(--muted);display:flex;gap:4px;align-items:center}
-.cb p{font-size:14px;color:var(--ink2);margin:2px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card.resolved{opacity:.7}
-.empty{text-align:center;padding:60px 20px;color:var(--muted);grid-column:1/-1}
-.empty .big{font-size:48px}
-.empty h3{color:var(--ink);margin:8px 0 6px}
-
-/* Modal */
-.ov{position:fixed;inset:0;background:rgba(20,33,61,.5);display:none;align-items:flex-start;justify-content:center;z-index:20;padding:30px 14px;overflow-y:auto}
-.ov.show{display:flex}
-.modal{background:#fff;border-radius:18px;width:100%;max-width:580px;box-shadow:0 30px 70px rgba(0,0,0,.25);overflow:hidden}
-.mh{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
-.mh h2{font-size:22px}
-.x{border:0;background:#e9eff1;width:34px;height:34px;border-radius:50%;font-size:18px}
-.mb{padding:20px 22px}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.seg label{border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;display:flex;gap:10px;align-items:center;font-weight:600}
-.seg input{display:none}
-.seg label.lost:has(input:checked){border-color:var(--lost);background:var(--lostbg)}
-.seg label.found:has(input:checked){border-color:var(--found);background:var(--foundbg)}
-.seg small{display:block;font-weight:400;color:var(--muted);font-size:12px}
-.fld{margin-bottom:14px}
-.fld label{display:block;font-size:13px;font-weight:600;margin-bottom:5px;color:var(--ink2)}
-.fld input,.fld select,.fld textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
-.fld input:focus,.fld select:focus,.fld textarea:focus,.search input:focus{outline:none;border-color:var(--brand)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hint{font-size:12px;color:var(--muted);margin-top:4px}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;color:var(--muted);font-size:14px;cursor:pointer;position:relative}
-.drop img{max-height:160px;border-radius:8px;display:block;margin:0 auto 8px}
-.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.tip{background:#eef6f7;border-radius:10px;padding:10px 12px;font-size:13px;color:var(--brand2);margin-bottom:14px}
-.mf{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line);background:#f6f9fa}
-.err{color:var(--lost);font-size:13px;margin-right:auto;align-self:center}
-
-/* Detail */
-.dimg{width:100%;max-height:340px;object-fit:cover;display:block;background:#e4ecee}
-.dl{display:grid;grid-template-columns:110px 1fr;gap:8px 12px;font-size:14px;margin:14px 0}
-.dl dt{color:var(--muted)}
-.dl dd{margin:0}
-.contact{background:#eef3f4;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.contact b{font-size:16px;word-break:break-all}
-.desc{white-space:pre-wrap;color:var(--ink2);font-size:15px}
-
-footer{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:var(--muted)}
-footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;transition:transform .25s;z-index:30}
-.toast.show{transform:translateX(-50%) translateY(0)}
-
-@media (max-width:760px){
-  .hero{grid-template-columns:1fr}
-  .row2{grid-template-columns:1fr}
-  .dl{grid-template-columns:90px 1fr}
-}
-</style>
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-
-<header class="top">
-  <div class="wrap">
-    <div class="nav">
-      <div class="logo"><span class="mark">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span><b>WUB Lost &amp; Found</b></div>
-      <span style="font-size:13px;color:#cfe1e5">World University of Bangladesh · Uttara</span>
-    </div>
-    <div class="hero">
+<main>
+  <div class="hero">
+    <div class="wrap hero-in">
       <div>
         <h1>Lost something on campus?<br><em>Found something?</em></h1>
-        <p>A shared board for WUB students and staff. Post what you lost or found, search what others have posted, and help things get back to their owners.</p>
+        <p>The lost and found board for World University of Bangladesh. Post what you lost or found, search what others have posted, and help things get back to their owners.</p>
+        <form class="hero-search" id="heroSearch" role="search">
+          <input id="hq" type="search" placeholder="Search: phone, ID card, blue bag…" aria-label="Search items">
+          <button class="btn btn-brand" type="submit">Search</button>
+        </form>
         <div class="cta">
-          <button class="btn btn-lost" data-new="lost">＋ I lost something</button>
-          <button class="btn btn-found" data-new="found">＋ I found something</button>
+          <a class="btn btn-lost" href="post.html?type=lost">＋ I lost something</a>
+          <a class="btn btn-found" href="post.html?type=found">＋ I found something</a>
         </div>
       </div>
       <div class="stats">
-        <div class="stat"><div class="n" id="sLost">0</div><div class="l">Lost items</div></div>
-        <div class="stat"><div class="n" id="sFound">0</div><div class="l">Found items</div></div>
-        <div class="stat"><div class="n" id="sDone">0</div><div class="l">Reunited</div></div>
+        <div class="stat"><div class="n" id="sLost">–</div><div class="l">Lost items</div></div>
+        <div class="stat"><div class="n" id="sFound">–</div><div class="l">Found items</div></div>
+        <div class="stat"><div class="n" id="sDone">–</div><div class="l">Reunited</div></div>
       </div>
     </div>
   </div>
-</header>
 
-<div class="toolbar">
-  <div class="wrap tb">
-    <div class="tabs" role="tablist">
-      <button class="tab on" data-tab="all">All</button>
-      <button class="tab" data-tab="lost">Lost</button>
-      <button class="tab" data-tab="found">Found</button>
-      <button class="tab" data-tab="resolved">Reunited</button>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><h2>Recently lost</h2><a href="browse.html?type=lost">See all lost items →</a></div>
+      <div class="grid" id="gLost"></div>
     </div>
-    <div class="search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Search: phone, ID card, blue bag, library…">
-    </div>
-    <select class="f" id="fCat"><option value="">All categories</option></select>
-    <select class="f" id="fLoc"><option value="">All places</option></select>
-  </div>
-</div>
+  </section>
 
-<main class="wrap">
-  <div class="notice" id="notice"></div>
-  <div class="grid" id="grid"></div>
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2>Recently found</h2><a href="browse.html?type=found">See all found items →</a></div>
+      <div class="grid" id="gFound"></div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2>How it works</h2><a href="tips.html">Safety tips →</a></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Post it</h3><p>Say what you lost or found, where on campus, and when. Add a photo if you can.</p></div>
+        <div class="step"><div class="num">2</div><h3>Search &amp; match</h3><p>Browse by category or place. Check the other list too: someone may have already found your item.</p></div>
+        <div class="step"><div class="num">3</div><h3>Reunite</h3><p>Contact the person, check it's really theirs, meet on campus, and mark the post as reunited.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2>Browse by category</h2></div>
+      <div class="cats" id="cats"></div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="band">
+        <div><h2>Found something today?</h2><p>It takes one minute to post, and it could save someone's whole week.</p></div>
+        <a class="btn btn-found" href="post.html?type=found">Post a found item</a>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div>A student-run community board for World University of Bangladesh. Not an official university service.</div>
-    <div>Found an ID card or wallet? You can also hand it in at the university office.</div>
-  </div>
-</footer>
-
-<!-- Post form -->
-<div class="ov" id="ovForm">
-  <form class="modal" id="form" novalidate>
-    <div class="mh"><h2 id="formTitle">New post</h2><button type="button" class="x" data-close>×</button></div>
-    <div class="mb">
-      <div class="seg">
-        <label class="lost"><input type="radio" name="type" value="lost"><span>😟</span><span>I lost it<small>Ask people to look out</small></span></label>
-        <label class="found"><input type="radio" name="type" value="found"><span>🙌</span><span>I found it<small>Help it get back home</small></span></label>
-      </div>
-      <div class="tip" id="tip"></div>
-      <div class="fld"><label for="title">What is it? *</label><input id="title" name="title" maxlength="80" placeholder="e.g. Black Samsung phone with cracked cover"></div>
-      <div class="row2">
-        <div class="fld"><label for="category">Category *</label><select id="category" name="category"></select></div>
-        <div class="fld"><label for="date">Date *</label><input id="date" name="date" type="date"></div>
-      </div>
-      <div class="row2">
-        <div class="fld"><label for="location">Where on campus? *</label><select id="location" name="location"></select></div>
-        <div class="fld"><label for="place">Exact spot</label><input id="place" name="place" maxlength="60" placeholder="e.g. Room 504, 3rd floor"></div>
-      </div>
-      <div class="fld"><label for="desc">Description</label><textarea id="desc" name="desc" rows="3" maxlength="600" placeholder="Colour, brand, marks, what was inside…"></textarea>
-        <div class="hint" id="descHint"></div></div>
-      <div class="fld"><label>Photo (optional)</label>
-        <div class="drop" id="drop"><span id="dropTxt">📷 Tap to add a photo</span><input type="file" id="photo" accept="image/*"></div>
-      </div>
-      <div class="row2">
-        <div class="fld"><label for="contactName">Your name *</label><input id="contactName" name="contactName" maxlength="50"></div>
-        <div class="fld"><label for="dept">Department</label><select id="dept" name="dept"></select></div>
-      </div>
-      <div class="fld"><label for="contact">How can people reach you? *</label><input id="contact" name="contact" maxlength="80" placeholder="Phone, WhatsApp, email or Facebook">
-        <div class="hint">This is shown on your post so the owner or finder can contact you.</div></div>
-    </div>
-    <div class="mf"><span class="err" id="err"></span><button type="button" class="btn btn-ghost" data-close>Cancel</button><button type="submit" class="btn btn-dark" id="submit">Post it</button></div>
-  </form>
-</div>
-
-<!-- Detail -->
-<div class="ov" id="ovDetail"><div class="modal" id="detail"></div></div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-const CATS = [
-  ["phone","📱","Mobile phone"],["wallet","👛","Wallet / Money"],["id","🪪","ID card / Documents"],
-  ["keys","🔑","Keys"],["bag","🎒","Bag / Backpack"],["books","📚","Books / Notes"],
-  ["electronics","💻","Laptop / Electronics"],["earbuds","🎧","Earbuds / Headphones"],
-  ["clothing","🧥","Clothing / Accessories"],["jewelry","💍","Jewellery / Watch"],
-  ["bottle","🥤","Water bottle / Tiffin"],["umbrella","☂️","Umbrella"],["other","📦","Other"]
-];
-const LOCS = ["Classroom","Library","Cafeteria / Canteen","Auditorium","Computer / Science lab","Washroom","Corridor / Stairs / Lift","Main gate / Reception","Parking area","University bus / Transport","Prayer room","Sports / Common room","Outside campus (nearby)","Other"];
-const DEPTS = ["","Business Administration","Tourism & Hospitality Management","English","Law","Media Studies & Journalism","Education","Pharmacy","Architecture","Biomedical Engineering & Public Health","Computer Science & Engineering","Textile Engineering & Fashion Design","Mechatronics","Mechanical","Automobile","Electrical & Electronic","Civil","Staff / Faculty member","Visitor"];
-const catOf = k => CATS.find(c=>c[0]===k) || CATS[CATS.length-1];
-
-const $ = s => document.querySelector(s);
-const el = (tag, attrs={}, ...kids) => { const e=document.createElement(tag); for(const[k,v] of Object.entries(attrs)){ if(k==="class") e.className=v; else if(k==="text") e.textContent=v; else if(k.startsWith("on")) e.addEventListener(k.slice(2),v); else e.setAttribute(k,v);} for(const k of kids) if(k!=null) e.append(k); return e; };
-
-// Fill selects
-const opt = (v,t)=>el("option",{value:v,text:t});
-CATS.forEach(c=>{ $("#fCat").append(opt(c[0],c[1]+" "+c[2])); $("#category").append(opt(c[0],c[1]+" "+c[2])); });
-LOCS.forEach(l=>{ $("#fLoc").append(opt(l,l)); $("#location").append(opt(l,l)); });
-DEPTS.forEach(d=>$("#dept").append(opt(d,d||"— Select —")));
-$("#category").prepend(opt("","— Select —")); $("#category").value="";
-$("#location").prepend(opt("","— Select —")); $("#location").value="";
-
-// State
-let posts = [];          // [{id, ...data}]
-let db = null, user = null, myId = null, amOwner = false, canWrite = true, assets = null;
-let filter = {tab:"all", q:"", cat:"", loc:""};
-let localMode = true;
-
-function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2600); }
-function notice(msg){ const n=$("#notice"); if(!msg){n.style.display="none";return;} n.textContent=msg; n.style.display="block"; }
-function fmtDate(d){ if(!d) return ""; try{ return new Date(d+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}catch(e){return d;} }
-function ago(ts){ if(!ts) return ""; const s=(Date.now()-ts)/1000; if(s<60) return "just now"; if(s<3600) return Math.floor(s/60)+" min ago"; if(s<86400) return Math.floor(s/3600)+" h ago"; const d=Math.floor(s/86400); return d<30? d+" day"+(d>1?"s":"")+" ago" : new Date(ts).toLocaleDateString("en-GB"); }
-function photoSrc(p){ if(!p.photo) return null; if(typeof p.photo.assetId==="string" && /^[A-Za-z0-9_-]+$/.test(p.photo.assetId)) return "/_blob/"+p.photo.assetId; if(typeof p.photo.dataUrl==="string" && p.photo.dataUrl.startsWith("data:image/")) return p.photo.dataUrl; return null; }
-function canManage(p){ return amOwner || (myId && p.authorId===myId) || (localMode); }
-
-// Render
-function render(){
-  const q = filter.q.trim().toLowerCase();
-  const open = posts.filter(p=>p.status!=="resolved");
-  $("#sLost").textContent = open.filter(p=>p.type==="lost").length;
-  $("#sFound").textContent = open.filter(p=>p.type==="found").length;
-  $("#sDone").textContent = posts.filter(p=>p.status==="resolved").length;
-
-  let list = posts.filter(p=>{
-    if(filter.tab==="resolved"){ if(p.status!=="resolved") return false; }
-    else { if(p.status==="resolved" && filter.tab!=="all") return false; if(filter.tab!=="all" && p.type!==filter.tab) return false; }
-    if(filter.cat && p.category!==filter.cat) return false;
-    if(filter.loc && p.location!==filter.loc) return false;
-    if(q){ const hay=[p.title,p.desc,p.place,p.location,catOf(p.category)[2]].join(" ").toLowerCase(); if(!q.split(/\s+/).every(w=>hay.includes(w))) return false; }
-    return true;
-  });
-  if(filter.tab==="all") list.sort((a,b)=>(a.status==="resolved")-(b.status==="resolved") || (b.createdAt||0)-(a.createdAt||0));
-
-  const g=$("#grid"); g.replaceChildren();
-  if(!list.length){
-    const none = !posts.length;
-    g.append(el("div",{class:"empty"},
-      el("div",{class:"big",text: none?"🧭":"🔍"}),
-      el("h3",{text: none?"No posts yet":"Nothing matches"}),
-      el("div",{text: none?"Be the first — post something you lost or found on campus.":"Try a different word, or clear the filters."})
-    ));
-    return;
+<script type="module">
+import { layout, store, card, empty, loading, CATS, el, $ } from "./assets/app.js";
+layout("index.html");
+CATS.forEach(c => $("#cats").append(el("a", { class: "cat", href: "browse.html?cat=" + c[0] }, el("span", { text: c[1] }), c[2])));
+$("#heroSearch").addEventListener("submit", e => { e.preventDefault(); location.href = "browse.html?q=" + encodeURIComponent($("#hq").value.trim()); });
+$("#gLost").append(loading()); $("#gFound").append(loading());
+try {
+  const posts = await store.list();
+  const open = posts.filter(p => p.status !== "resolved");
+  $("#sLost").textContent = open.filter(p => p.type === "lost").length;
+  $("#sFound").textContent = open.filter(p => p.type === "found").length;
+  $("#sDone").textContent = posts.filter(p => p.status === "resolved").length;
+  for (const [type, id] of [["lost", "#gLost"], ["found", "#gFound"]]) {
+    const g = $(id); g.replaceChildren();
+    const items = open.filter(p => p.type === type).slice(0, 4);
+    if (items.length) items.forEach(p => g.append(card(p)));
+    else g.append(empty(type === "lost" ? "🧭" : "🙌", type === "lost" ? "No lost items posted" : "No found items posted",
+      type === "lost" ? "Lost something? Post it so others can look out for it." : "Found something? Post it so the owner can find it.",
+      el("a", { class: "btn " + (type === "lost" ? "btn-lost" : "btn-found"), href: "post.html?type=" + type, text: "Post an item" })));
   }
-  for(const p of list){
-    const c=catOf(p.category), src=photoSrc(p), done=p.status==="resolved";
-    const ph=el("div",{class:"ph"});
-    if(src) ph.append(el("img",{src,alt:"",loading:"lazy"})); else ph.append(el("span",{class:"ico",text:c[1]}));
-    ph.append(el("span",{class:"badge "+(done?"b-done":p.type==="lost"?"b-lost":"b-found"),text: done?"Reunited":p.type}));
-    g.append(el("button",{class:"card"+(done?" resolved":""),onclick:()=>openDetail(p.id)},
-      ph,
-      el("div",{class:"cb"},
-        el("h3",{text:p.title}),
-        el("div",{class:"meta",text:"📍 "+p.location+(p.place?" · "+p.place:"")}),
-        el("div",{class:"meta",text:"🗓 "+fmtDate(p.date)+"  ·  "+ago(p.createdAt)}),
-        p.desc? el("p",{text:p.desc}) : null
-      )
-    ));
-  }
+} catch (e) {
+  console.error(e);
+  $("#gLost").replaceChildren(empty("⚠️", "Couldn't load posts", "Check your connection and refresh the page."));
+  $("#gFound").replaceChildren();
 }
-
-// Filters
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{ document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b)); filter.tab=b.dataset.tab; render(); }));
-$("#q").addEventListener("input",e=>{filter.q=e.target.value;render();});
-$("#fCat").addEventListener("change",e=>{filter.cat=e.target.value;render();});
-$("#fLoc").addEventListener("change",e=>{filter.loc=e.target.value;render();});
-
-// Modals
-function openOv(id){ $(id).classList.add("show"); document.body.style.overflow="hidden"; }
-function closeOv(){ document.querySelectorAll(".ov").forEach(o=>o.classList.remove("show")); document.body.style.overflow=""; }
-document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{ if(e.target===o || e.target.closest("[data-close]")) closeOv(); }));
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeOv(); });
-
-// Form
-let photoBlob=null, photoData=null;
-function setType(t){
-  $$type(t);
-  $("#tip").textContent = t==="found"
-    ? "Tip: for ID cards, wallets and phones, don't post every detail (like the ID number or what's inside). Ask the person who contacts you to describe it, so you know it's really theirs."
-    : "Tip: add details only the owner would know in your head, but a clear description and photo help people spot it.";
-  $("#descHint").textContent = t==="found" ? "Keep one identifying detail secret to check the real owner." : "";
-  $("#formTitle").textContent = t==="found" ? "Report a found item" : "Report a lost item";
-}
-function $$type(t){ document.querySelectorAll('input[name=type]').forEach(r=>r.checked=(r.value===t)); }
-document.querySelectorAll('input[name=type]').forEach(r=>r.addEventListener("change",()=>setType(r.value)));
-document.querySelectorAll("[data-new]").forEach(b=>b.addEventListener("click",()=>openForm(b.dataset.new)));
-
-function openForm(t){
-  if(!canWrite){ toast("You can view posts, but you don't have permission to post on this page."); return; }
-  $("#form").reset(); photoBlob=null; photoData=null; $("#err").textContent="";
-  $("#drop").querySelector("img")?.remove(); $("#dropTxt").textContent="📷 Tap to add a photo";
-  {const t=new Date();t.setMinutes(t.getMinutes()-t.getTimezoneOffset());$("#date").value=t.toISOString().slice(0,10);}
-  try{ const saved=JSON.parse(localStorage.getItem("wublf-me")||"{}"); if(saved.n) $("#contactName").value=saved.n; if(saved.c) $("#contact").value=saved.c; if(saved.d) $("#dept").value=saved.d; }catch(e){}
-  setType(t); openOv("#ovForm"); setTimeout(()=>$("#title").focus(),50);
-}
-
-$("#photo").addEventListener("change",async e=>{
-  const f=e.target.files[0]; if(!f) return;
-  if(!f.type.startsWith("image/")){ toast("Please choose an image."); return; }
-  try{
-    const r = await shrink(f, 1000, 0.8);
-    photoBlob=r.blob; photoData=r.dataUrl;
-    const d=$("#drop"); d.querySelector("img")?.remove();
-    d.prepend(el("img",{src:r.dataUrl,alt:"Preview"})); $("#dropTxt").textContent="Tap to change photo";
-  }catch(err){ toast("Couldn't read that image."); }
-});
-function shrink(file,max,q){
-  return new Promise((res,rej)=>{
-    const img=new Image(); const url=URL.createObjectURL(file);
-    img.onload=()=>{ let {width:w,height:h}=img; const s=Math.min(1,max/Math.max(w,h)); w=Math.round(w*s); h=Math.round(h*s);
-      const cv=document.createElement("canvas"); cv.width=w; cv.height=h; cv.getContext("2d").drawImage(img,0,0,w,h); URL.revokeObjectURL(url);
-      const dataUrl=cv.toDataURL("image/jpeg",q); cv.toBlob(b=>res({blob:b,dataUrl}),"image/jpeg",q); };
-    img.onerror=rej; img.src=url;
-  });
-}
-async function smallDataUrl(){ // fallback embed, keep doc well under 256 KiB
-  if(!photoData) return null;
-  if(photoData.length<170000) return photoData;
-  const img=new Image(); img.src=photoData; await img.decode();
-  const s=Math.min(1,560/Math.max(img.width,img.height)); const cv=document.createElement("canvas");
-  cv.width=Math.round(img.width*s); cv.height=Math.round(img.height*s); cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
-  const d=cv.toDataURL("image/jpeg",0.7); return d.length<200000? d : null;
-}
-
-$("#form").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const f=e.target, v=n=>(f.elements[n].value||"").trim();
-  const type=f.querySelector('input[name=type]:checked')?.value;
-  const need=[["title","what the item is"],["category","a category"],["date","the date"],["location","where on campus"],["contactName","your name"],["contact","how to reach you"]];
-  if(!type){ $("#err").textContent="Choose lost or found."; return; }
-  for(const [n,label] of need){ if(!v(n)){ $("#err").textContent="Please add "+label+"."; f.elements[n].focus(); return; } }
-  const btn=$("#submit"); btn.disabled=true; btn.textContent="Posting…"; $("#err").textContent="";
-  try{
-    let photo=null;
-    if(photoBlob && assets){ try{ const a=await assets.upload(photoBlob); photo={assetId:a.id}; }catch(err){ /* fall back */ } }
-    if(photoBlob && !photo){ const d=await smallDataUrl(); if(d) photo={dataUrl:d}; }
-    const data={ type, title:v("title"), category:v("category"), date:v("date"), location:v("location"), place:v("place"),
-      desc:v("desc"), contactName:v("contactName"), contact:v("contact"), dept:v("dept"),
-      photo, status:"open", authorId:myId||null, createdAt:Date.now() };
-    try{ localStorage.setItem("wublf-me",JSON.stringify({n:data.contactName,c:data.contact,d:data.dept})); }catch(e){}
-    if(db){ await db.collection("posts").add(data); }
-    else { posts.unshift({id:"local-"+Date.now(),...data}); render(); }
-    closeOv(); toast(type==="lost"?"Posted. Fingers crossed! 🤞":"Posted. Thanks for helping! 🙌");
-  }catch(err){
-    if(err && err.code==="invalid_argument"){ canWrite=false; $("#err").textContent="You don't have permission to post here."; }
-    else if(err && err.code==="quota_exceeded"){ $("#err").textContent="The board is full. Ask the owner to clear old posts."; }
-    else $("#err").textContent="Couldn't post right now. Please try again.";
-  }finally{ btn.disabled=false; btn.textContent="Post it"; }
-});
-
-// Detail
-function openDetail(id){
-  const p=posts.find(x=>x.id===id); if(!p) return;
-  const c=catOf(p.category), src=photoSrc(p), done=p.status==="resolved";
-  const m=$("#detail"); m.replaceChildren();
-  m.append(el("div",{class:"mh"},
-    el("div",{}, el("span",{class:"badge "+(done?"b-done":p.type==="lost"?"b-lost":"b-found"),style:"position:static;display:inline-block;margin-bottom:6px",text:done?"Reunited":p.type}), el("h2",{text:p.title})),
-    el("button",{class:"x",type:"button","data-close":"",text:"×"})));
-  if(src) m.append(el("img",{class:"dimg",src,alt:p.title}));
-  const dl=el("dl",{class:"dl"});
-  const add=(k,val)=>{ if(val){ dl.append(el("dt",{text:k}),el("dd",{text:val})); } };
-  add("Category",c[1]+" "+c[2]); add(p.type==="lost"?"Lost at":"Found at",p.location+(p.place?" — "+p.place:""));
-  add("Date",fmtDate(p.date)); add("Posted",ago(p.createdAt)); add("Posted by",p.contactName+(p.dept?" · "+p.dept:""));
-  const body=el("div",{class:"mb"}, dl);
-  if(p.desc) body.append(el("div",{class:"desc",text:p.desc}));
-  if(!done){
-    const copyBtn=el("button",{class:"btn btn-dark",type:"button",text:"Copy",onclick:async()=>{ try{ await navigator.clipboard.writeText(p.contact); toast("Copied"); }catch(e){ toast("Select the text to copy it"); } }});
-    body.append(el("div",{style:"height:14px"}),
-      el("div",{class:"contact"}, el("div",{}, el("div",{style:"font-size:12px;color:var(--muted)",text: p.type==="lost"?"Seen it? Contact the owner":"Is it yours? Contact the finder"}), el("b",{text:p.contact})), copyBtn));
-    if(p.type==="found") body.append(el("div",{class:"hint",style:"margin-top:8px",text:"Be ready to describe the item so the finder knows it's yours."}));
-  } else {
-    body.append(el("div",{class:"tip",style:"margin-top:14px",text:"🎉 This item has been returned to its owner."}));
-  }
-  m.append(body);
-  if(canManage(p) && canWrite){
-    const foot=el("div",{class:"mf"});
-    foot.append(el("button",{class:"btn btn-ghost",type:"button",text:"Delete post",style:"margin-right:auto;color:var(--lost)",onclick:()=>confirmDel(p,foot)}));
-    foot.append(el("button",{class:"btn btn-found",type:"button",text: done?"Mark as still open":"✓ Mark as reunited",onclick:()=>setStatus(p, done?"open":"resolved")}));
-    m.append(foot);
-  }
-  openOv("#ovDetail");
-}
-function confirmDel(p,foot){
-  foot.replaceChildren(el("span",{class:"err",style:"color:var(--ink2)",text:"Delete this post for everyone?"}),
-    el("button",{class:"btn btn-ghost",type:"button",text:"Keep",onclick:()=>openDetail(p.id)}),
-    el("button",{class:"btn btn-lost",type:"button",text:"Delete",onclick:async()=>{
-      try{ if(db) await db.collection("posts").doc(p.id).delete(); else { posts=posts.filter(x=>x.id!==p.id); render(); } closeOv(); toast("Post deleted"); }
-      catch(e){ toast("Couldn't delete it."); }
-    }}));
-}
-async function setStatus(p,status){
-  try{ if(db) await db.collection("posts").doc(p.id).update({status}); else { p.status=status; render(); }
-    closeOv(); toast(status==="resolved"?"Marked as reunited 🎉":"Marked as open"); }
-  catch(e){ toast("Couldn't update it."); }
-}
-
-render();
-
-// Connect to shared storage
-(async function connect(){
-  if(!window.claude || typeof window.claude.use!=="function"){ notice("Preview mode: posts are only kept until you close this page."); return; }
-  try{ user = await window.claude.use("user"); }catch(e){ user=null; }
-  try{ db = await window.claude.use("db"); }catch(e){ db=null; }
-  if(!db){ notice("Preview mode: sign in to see and share posts. Anything posted now is only kept until you close this page."); return; }
-  localMode=false;
-  try{ myId = user ? await user.id() : null; }catch(e){}
-  try{ amOwner = user ? !!(await user.isOwner()) : false; }catch(e){}
-  try{ const w = user ? await user.can("data.write") : null; if(w===false) canWrite=false; }catch(e){}
-  try{ assets = await window.claude.use("assets"); }catch(e){ assets=null; }
-  if(!canWrite){ document.querySelectorAll("[data-new]").forEach(b=>b.style.display="none"); }
-
-  $("#grid").replaceChildren(el("div",{class:"empty"},el("div",{class:"big",text:"⏳"}),el("h3",{text:"Loading posts…"})));
-  let timer=setTimeout(()=>notice("Posts can't be reached right now. They'll appear when the connection is back."),10000);
-  db.collection("posts").orderBy("createdAt","desc").limit(500).onSnapshot(snap=>{
-    posts = snap.docs.map(d=>{ const x=d.data()||{}; return {id:d.id, ...x}; })
-      .filter(p=>(p.type==="lost"||p.type==="found") && typeof p.title==="string");
-    if(!snap.metadata.fromCache){ clearTimeout(timer); notice(""); }
-    render();
-  }, err=>{ clearTimeout(timer); notice("Posts can't be loaded right now."); render(); });
-})();
 </script>
 </body>
 </html>

@@ -1,20 +1,34 @@
 # WUB Lost & Found
 
-A lost-and-found board for students and staff of World University of Bangladesh (Uttara, Dhaka).
-This is a student-run project, not an official university service.
+A lost-and-found website for students and staff of World University of Bangladesh (Uttara, Dhaka).
+Student-run project, not an official university service.
 
-## Features
-- Post an item as **Lost** or **Found**: title, category, campus location, date, description, photo, and contact info
-- Search by keyword, filter by Lost / Found / Reunited, category and place
-- Mark a post as **Reunited** or delete it
-- Safety tip for found ID cards, wallets and phones: keep one detail secret to verify the real owner
-- Works on phones and desktops
+## Pages
+| Page | What it does |
+|---|---|
+| `index.html` | Home: search, stats, recent lost and found items, how it works, categories |
+| `browse.html` | All items with search, Lost / Found / Reunited tabs, category, place and sort filters |
+| `post.html` | Form to post a lost or found item, with photo upload |
+| `item.html` | Item details, contact info, share link, matching items; the poster can mark it reunited or delete it |
+| `my-posts.html` | Posts made from this device |
+| `tips.html` | Safety tips and FAQ |
+| `about.html` | About, privacy, and how to report a post |
+| `404.html` | Not-found page |
 
-## Run it
-It's a single file: open `index.html` in a browser, or turn on GitHub Pages
-(Settings → Pages → Deploy from branch → `main` / root).
+Shared code is in `assets/`: `style.css`, `app.js` (layout and helpers), `store.js` (data), `config.js` (Firebase settings).
 
-## Note on saving posts
-Posts are saved in a shared database only when the page runs as a Claude artifact.
-On GitHub Pages it runs in preview mode, so posts are kept only until the page is closed.
-To make posting work for everyone, connect a free database such as Firebase Firestore.
+## Saving posts (Firebase)
+Until Firebase is set up, the site runs in **demo mode** and keeps posts only on the visitor's own device.
+To save posts for everyone:
+
+1. Create a project at https://console.firebase.google.com
+2. **Build → Firestore Database → Create database** (location `asia-south1`, production mode)
+3. **Build → Authentication → Get started → Sign-in method → Anonymous → Enable**
+4. **Firestore → Rules**: paste the contents of `firestore.rules` and click **Publish**
+5. **Project settings → Your apps → Web (</>)**: register an app and copy the `firebaseConfig` values into `assets/config.js`
+6. Commit; GitHub Pages updates in a minute or two
+
+To remove a bad post, delete it in the Firebase console under Firestore → `posts`.
+
+## Run locally
+ES modules need a web server: `python3 -m http.server`, then open http://localhost:8000

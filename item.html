@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Item · WUB Lost __TITLE__amp; Found</title>
+<meta name="description" content="Lost and found board for World University of Bangladesh students. Post lost or found items on campus and help them get back to their owners.">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f4a261'/%3E%3Ccircle cx='14.5' cy='14.5' r='7' fill='none' stroke='%230b3a46' stroke-width='3'/%3E%3Cpath d='m20 20 5 5' stroke='%230b3a46' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main>
+  <div class="page-head"><div class="wrap"><a href="browse.html" style="color:#cfe1e5;text-decoration:none">← Back to all items</a></div></div>
+  <div class="wrap" id="root"></div>
+  <section style="padding-top:10px" id="simSec" hidden>
+    <div class="wrap">
+      <div class="sec-head"><h2 id="simTitle">Similar items</h2></div>
+      <div class="grid" id="sim"></div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { layout, store, card, empty, loading, catOf, el, param, fmtDate, ago, photoSrc, copy, toast, $ } from "./assets/app.js";
+layout("");
+const root = $("#root");
+root.append(loading());
+const id = param("id");
+let p = null;
+try { p = await store.get(id); } catch (e) { console.error(e); }
+
+if (!p) {
+  root.replaceChildren(el("div", { style: "margin-top:-20px;position:relative" }, empty("🔍", "Post not found", "It may have been deleted by the person who posted it.", el("a", { class: "btn btn-brand", href: "browse.html", text: "Browse items" }))));
+} else {
+  render();
+  if (param("new")) { toast(p.type === "lost" ? "Posted. Fingers crossed! 🤞" : "Posted. Thanks for helping! 🙌"); history.replaceState(null, "", "item.html?id=" + encodeURIComponent(id)); }
+  similar();
+}
+
+function render() {
+  document.title = p.title + " · WUB Lost & Found";
+  const c = catOf(p.category), src = photoSrc(p), done = p.status === "resolved", mine = p.authorId && p.authorId === store.me();
+  const photo = el("div", { class: "photo" });
+  if (src) photo.append(el("img", { src, alt: p.title })); else photo.append(el("span", { class: "ico", text: c[1] }));
+
+  const dl = el("dl", { class: "dl" });
+  const add = (k, v) => { if (v) dl.append(el("dt", { text: k }), el("dd", { text: v })); };
+  add("Category", c[1] + " " + c[2]);
+  add(p.type === "lost" ? "Lost at" : "Found at", p.location + (p.place ? " — " + p.place : ""));
+  add("Date", fmtDate(p.date)); add("Posted", ago(p.createdAt)); add("Posted by", p.contactName + (p.dept ? " · " + p.dept : ""));
+
+  const info = el("div", { class: "panel" },
+    el("span", { class: "badge inline " + (done ? "b-done" : p.type === "lost" ? "b-lost" : "b-found"), text: done ? "Reunited" : p.type }),
+    el("h1", { text: p.title }), dl, p.desc ? el("p", { class: "desc", text: p.desc }) : null);
+
+  if (!done) {
+    info.append(el("div", { class: "contact" },
+      el("div", {}, el("small", { text: p.type === "lost" ? "Seen it? Contact the owner" : "Is it yours? Contact the finder" }), el("b", { text: p.contact })),
+      el("button", { class: "btn btn-dark", type: "button", text: "Copy", onclick: () => copy(p.contact) })));
+    if (p.type === "found") info.append(el("p", { class: "hint", text: "Be ready to describe the item so the finder knows it's yours. Meet in a public place on campus." }));
+  } else {
+    info.append(el("div", { class: "tip", style: "margin:0", text: "🎉 This item has been returned to its owner." }));
+  }
+  info.append(el("div", { class: "actions" }, el("button", { class: "btn btn-ghost", type: "button", text: "🔗 Copy link to share", onclick: () => copy(location.href) })));
+
+  if (mine) {
+    const box = el("div", { class: "owner-box" }, el("p", { class: "hint", style: "margin:0 0 10px", text: "This is your post." }));
+    const row = el("div", { class: "actions", style: "margin:0" });
+    row.append(
+      el("button", { class: "btn btn-found", type: "button", text: done ? "Mark as still open" : "✓ Mark as reunited", onclick: async () => {
+        try { await store.setStatus(p.id, done ? "open" : "resolved"); p.status = done ? "open" : "resolved"; render(); toast(p.status === "resolved" ? "Marked as reunited 🎉" : "Marked as open"); }
+        catch (e) { toast("Couldn't update it."); } } }),
+      el("button", { class: "btn btn-ghost", type: "button", style: "color:var(--lost)", text: "Delete post", onclick: () => {
+        row.replaceChildren(el("span", { text: "Delete this post for everyone?", style: "align-self:center" }),
+          el("button", { class: "btn btn-ghost", type: "button", text: "Keep it", onclick: render }),
+          el("button", { class: "btn btn-lost", type: "button", text: "Delete", onclick: async () => {
+            try { await store.remove(p.id); location.href = "my-posts.html?deleted=1"; } catch (e) { toast("Couldn't delete it."); } } }));
+      } }));
+    box.append(row); info.append(box);
+  }
+  root.replaceChildren(el("div", { class: "item" }, photo, info));
+}
+
+async function similar() {
+  try {
+    const all = await store.list();
+    const other = p.type === "lost" ? "found" : "lost";
+    const list = all.filter(x => x.id !== p.id && x.status !== "resolved" && x.type === other && x.category === p.category).slice(0, 4);
+    if (!list.length) return;
+    $("#simTitle").textContent = p.type === "lost" ? "Found items that might match" : "Lost items that might match";
+    list.forEach(x => $("#sim").append(card(x)));
+    $("#simSec").hidden = false;
+  } catch (e) {}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My posts · WUB Lost __TITLE__amp; Found</title>
+<meta name="description" content="Lost and found board for World University of Bangladesh students. Post lost or found items on campus and help them get back to their owners.">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f4a261'/%3E%3Ccircle cx='14.5' cy='14.5' r='7' fill='none' stroke='%230b3a46' stroke-width='3'/%3E%3Cpath d='m20 20 5 5' stroke='%230b3a46' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main>
+  <div class="page-head"><div class="wrap"><h1>My posts</h1><p>Posts you made from this device. Mark them as reunited when the item is back with its owner.</p></div></div>
+  <section style="padding-top:26px">
+    <div class="wrap">
+      <div class="grid" id="grid"></div>
+      <p class="hint" style="margin-top:18px">Your posts are linked to this browser. If you clear your browser data or use another phone, you won't be able to edit your older posts from there.</p>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { layout, store, card, empty, loading, el, param, toast, $ } from "./assets/app.js";
+layout("my-posts.html");
+if (param("deleted")) { toast("Post deleted"); history.replaceState(null, "", "my-posts.html"); }
+const g = $("#grid"); g.append(loading());
+try {
+  const all = await store.list();
+  const mine = all.filter(p => p.authorId && p.authorId === store.me());
+  g.replaceChildren();
+  if (!mine.length) g.append(empty("📝", "You haven't posted anything yet", "When you post a lost or found item, it shows up here.",
+    el("a", { class: "btn btn-brand", href: "post.html", text: "Post an item" })));
+  else mine.forEach(p => g.append(card(p)));
+} catch (e) { console.error(e); g.replaceChildren(empty("⚠️", "Couldn't load posts", "Check your connection and refresh the page.")); }
+</script>
+</body>
+</html>

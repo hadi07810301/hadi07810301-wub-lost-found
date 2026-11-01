@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Browse items · WUB Lost __TITLE__amp; Found</title>
+<meta name="description" content="Lost and found board for World University of Bangladesh students. Post lost or found items on campus and help them get back to their owners.">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f4a261'/%3E%3Ccircle cx='14.5' cy='14.5' r='7' fill='none' stroke='%230b3a46' stroke-width='3'/%3E%3Cpath d='m20 20 5 5' stroke='%230b3a46' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main>
+  <div class="page-head"><div class="wrap"><h1>Browse items</h1><p>Search everything posted by WUB students and staff. Check both lists: someone may have already found what you lost.</p></div></div>
+  <div class="toolbar">
+    <div class="wrap tb">
+      <div class="tabs" role="tablist">
+        <button class="tab" data-tab="all">All</button>
+        <button class="tab" data-tab="lost">Lost</button>
+        <button class="tab" data-tab="found">Found</button>
+        <button class="tab" data-tab="resolved">Reunited</button>
+      </div>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search: phone, ID card, blue bag, library…" aria-label="Search">
+      </div>
+      <select class="f" id="fCat" aria-label="Category"><option value="">All categories</option></select>
+      <select class="f" id="fLoc" aria-label="Place"><option value="">All places</option></select>
+      <select class="f" id="fSort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option></select>
+    </div>
+  </div>
+  <section style="padding-top:22px">
+    <div class="wrap">
+      <p class="count" id="count"></p>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { layout, store, card, empty, loading, CATS, LOCS, catOf, el, opt, param, $ } from "./assets/app.js";
+layout("browse.html");
+CATS.forEach(c => $("#fCat").append(opt(c[0], c[1] + " " + c[2])));
+LOCS.forEach(l => $("#fLoc").append(opt(l, l)));
+
+const f = { tab: param("type") || "all", q: param("q") || "", cat: param("cat") || "", loc: param("loc") || "", sort: "new" };
+if (!["all", "lost", "found", "resolved"].includes(f.tab)) f.tab = "all";
+$("#q").value = f.q; $("#fCat").value = f.cat; $("#fLoc").value = f.loc;
+let posts = [];
+
+function syncUrl() {
+  const u = new URLSearchParams();
+  if (f.tab !== "all") u.set("type", f.tab); if (f.q) u.set("q", f.q); if (f.cat) u.set("cat", f.cat); if (f.loc) u.set("loc", f.loc);
+  history.replaceState(null, "", "browse.html" + (u.toString() ? "?" + u : ""));
+}
+function render() {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.dataset.tab === f.tab));
+  const q = f.q.trim().toLowerCase();
+  let list = posts.filter(p => {
+    const done = p.status === "resolved";
+    if (f.tab === "resolved" ? !done : (f.tab !== "all" && (done || p.type !== f.tab))) return false;
+    if (f.cat && p.category !== f.cat) return false;
+    if (f.loc && p.location !== f.loc) return false;
+    if (q) { const hay = [p.title, p.desc, p.place, p.location, catOf(p.category)[2]].join(" ").toLowerCase(); if (!q.split(/\s+/).every(w => hay.includes(w))) return false; }
+    return true;
+  });
+  list.sort((a, b) => f.sort === "old" ? (a.createdAt || 0) - (b.createdAt || 0) : (b.createdAt || 0) - (a.createdAt || 0));
+  if (f.tab === "all") list.sort((a, b) => (a.status === "resolved") - (b.status === "resolved"));
+  $("#count").textContent = list.length + " item" + (list.length === 1 ? "" : "s");
+  const g = $("#grid"); g.replaceChildren();
+  if (!list.length) {
+    const none = !posts.length;
+    g.append(empty(none ? "🧭" : "🔍", none ? "No posts yet" : "Nothing matches", none ? "Be the first to post something you lost or found on campus." : "Try a different word, or clear the filters.",
+      none ? el("a", { class: "btn btn-brand", href: "post.html", text: "Post an item" })
+           : el("button", { class: "btn btn-ghost", text: "Clear filters", onclick: () => { Object.assign(f, { tab: "all", q: "", cat: "", loc: "" }); $("#q").value = ""; $("#fCat").value = ""; $("#fLoc").value = ""; syncUrl(); render(); } })));
+    return;
+  }
+  list.forEach(p => g.append(card(p)));
+}
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => { f.tab = b.dataset.tab; syncUrl(); render(); }));
+$("#q").addEventListener("input", e => { f.q = e.target.value; syncUrl(); render(); });
+$("#fCat").addEventListener("change", e => { f.cat = e.target.value; syncUrl(); render(); });
+$("#fLoc").addEventListener("change", e => { f.loc = e.target.value; syncUrl(); render(); });
+$("#fSort").addEventListener("change", e => { f.sort = e.target.value; render(); });
+
+$("#grid").append(loading());
+try { posts = await store.list(); render(); }
+catch (e) { console.error(e); $("#grid").replaceChildren(empty("⚠️", "Couldn't load posts", "Check your connection and refresh the page.")); }
+</script>
+</body>
+</html>
